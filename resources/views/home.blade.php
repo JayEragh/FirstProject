@@ -22,6 +22,24 @@
 
                     <h4>Welcome to DOCmag - Document Management System</h4>
                     
+                    <!-- Document Upload Chart Section -->
+                    <div class="row mt-4 mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-chart-line"></i> Document Upload Trends
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 400px;">
+                                        <canvas id="documentChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Document Statistics Section -->
                     <div class="row mt-4 mb-4">
                         <div class="col-md-4">
@@ -150,36 +168,7 @@
                     </div>
                     @endif
                     
-                    <!-- Document Upload Chart Section -->
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">
-                                        <i class="fas fa-chart-line"></i> My Document Uploads
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="documentChart" width="400" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        @if(Auth::user()->email === 'admin@docmag.com' && isset($adminChartData))
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">
-                                        <i class="fas fa-chart-bar"></i> System-wide Uploads
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="adminChart" width="400" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -195,20 +184,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const chartData = @json($chartData ?? []);
     const adminChartData = @json($adminChartData ?? null);
     
-    // User's document chart
+    // Create combined chart data
+    const datasets = [{
+        label: 'My Documents',
+        data: chartData.data || [],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        tension: 0.1,
+        fill: false
+    }];
+    
+    // Add admin data if available
+    if (adminChartData) {
+        datasets.push({
+            label: 'System-wide Documents',
+            data: adminChartData.data || [],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            tension: 0.1,
+            fill: false
+        });
+    }
+    
+    // Create the chart
     const ctx = document.getElementById('documentChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartData.labels || [],
-            datasets: [{
-                label: 'My Documents',
-                data: chartData.data || [],
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1,
-                fill: true
-            }]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -220,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 title: {
                     display: true,
-                    text: 'My Document Uploads (Last 30 Days)'
+                    text: 'Document Upload Trends (Last 30 Days)'
                 }
             },
             scales: {
@@ -233,46 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
-    // Admin system-wide chart
-    if (adminChartData) {
-        const adminCtx = document.getElementById('adminChart').getContext('2d');
-        new Chart(adminCtx, {
-            type: 'bar',
-            data: {
-                labels: adminChartData.labels || [],
-                datasets: [{
-                    label: 'System Documents',
-                    data: adminChartData.data || [],
-                    backgroundColor: 'rgba(255, 99, 132, 0.8)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    title: {
-                        display: true,
-                        text: 'System-wide Uploads (Last 30 Days)'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
-    }
 });
 </script>
 @endsection
