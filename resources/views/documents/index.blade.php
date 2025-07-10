@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>My Documents</h4>
-                    <a href="{{ route('documents.create') }}" class="btn btn-success">Upload New Document</a>
+                    @if(Auth::user()->email === 'admin@docmag.com')
+                        <a href="{{ route('documents.create') }}" class="btn btn-success">Upload New Document</a>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -48,14 +50,16 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('documents.show', $document->id) }}" class="btn btn-sm btn-info">View</a>
-                                                <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                                <form action="{{ route('documents.destroy', $document->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this document?')">
-                                                        Delete
-                                                    </button>
-                                                </form>
+                                                @if(Auth::user()->email === 'admin@docmag.com')
+                                                    <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                                    <form action="{{ route('documents.destroy', $document->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this document?')">
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -66,7 +70,9 @@
                         <div class="text-center py-4">
                             <h5>No documents found</h5>
                             <p>You haven't uploaded any documents yet.</p>
-                            <a href="{{ route('documents.create') }}" class="btn btn-primary">Upload Your First Document</a>
+                            @if(Auth::user()->email === 'admin@docmag.com')
+                                <a href="{{ route('documents.create') }}" class="btn btn-primary">Upload Your First Document</a>
+                            @endif
                         </div>
                     @endif
                 </div>

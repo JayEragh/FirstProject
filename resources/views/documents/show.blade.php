@@ -38,14 +38,16 @@
                             <h5>Actions</h5>
                             <div class="d-grid gap-2">
                                 <a href="{{ route('documents.download', $document->id) }}" class="btn btn-primary">Download File</a>
-                                <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-warning">Edit Document</a>
-                                <form action="{{ route('documents.destroy', $document->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this document?')">
-                                        Delete Document
-                                    </button>
-                                </form>
+                                @if(Auth::user()->email === 'admin@docmag.com')
+                                    <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-warning">Edit Document</a>
+                                    <form action="{{ route('documents.destroy', $document->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this document?')">
+                                            Delete Document
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>

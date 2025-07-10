@@ -29,7 +29,9 @@
                                     <h5 class="card-title">📄 Document Management</h5>
                                     <p class="card-text">Manage your personal document library.</p>
                                     <a href="{{ route('documents.index') }}" class="btn btn-primary">View Documents</a>
-                                    <a href="{{ route('documents.create') }}" class="btn btn-success">Upload Document</a>
+                                    @if(Auth::user()->email === 'admin@docmag.com')
+                                        <a href="{{ route('documents.create') }}" class="btn btn-success">Upload Document</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
