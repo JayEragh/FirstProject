@@ -22,6 +22,39 @@
 
                     <h4>Welcome to DOCmag - Document Management System</h4>
                     
+                    <!-- Document Statistics Section -->
+                    <div class="row mt-4 mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center bg-primary text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-file-alt fa-3x mb-3"></i>
+                                    <h3 class="card-title">{{ Auth::user()->documents->count() }}</h3>
+                                    <p class="card-text">Total Documents</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                                    <h3 class="card-title">{{ Auth::user()->documents->where('created_at', '>=', now()->subDays(7))->count() }}</h3>
+                                    <p class="card-text">Recent (7 days)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card text-center bg-info text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-download fa-3x mb-3"></i>
+                                    <h3 class="card-title">{{ Auth::user()->documents->where('created_at', '>=', now()->subDays(30))->count() }}</h3>
+                                    <p class="card-text">This Month</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="row mt-4">
                         <div class="col-md-6">
                             <div class="card mb-3">
@@ -48,6 +81,52 @@
                     </div>
 
                     @if(in_array(auth()->user()->email, ['admin@docmag.com']))
+                    <!-- Admin System Statistics -->
+                    <div class="row mt-4 mb-4">
+                        <div class="col-12">
+                            <h5 class="text-muted mb-3">📊 System Statistics</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center bg-warning text-dark">
+                                <div class="card-body">
+                                    <i class="fas fa-users fa-2x mb-2"></i>
+                                    <h4 class="card-title">{{ \App\Models\User::count() }}</h4>
+                                    <p class="card-text">Total Users</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card text-center bg-secondary text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                    <h4 class="card-title">{{ \App\Models\Document::count() }}</h4>
+                                    <p class="card-text">Total Documents</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card text-center bg-danger text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-clock fa-2x mb-2"></i>
+                                    <h4 class="card-title">{{ \App\Models\Document::where('created_at', '>=', now()->subDays(7))->count() }}</h4>
+                                    <p class="card-text">Recent Uploads</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card text-center bg-dark text-white">
+                                <div class="card-body">
+                                    <i class="fas fa-calendar fa-2x mb-2"></i>
+                                    <h4 class="card-title">{{ \App\Models\User::where('created_at', '>=', now()->subDays(30))->count() }}</h4>
+                                    <p class="card-text">New Users</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="card mb-3">
